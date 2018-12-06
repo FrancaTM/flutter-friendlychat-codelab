@@ -31,7 +31,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     ChatMessage message = ChatMessage(
       text: text,
       animationController: AnimationController(
-        duration: Duration(milliseconds: 300),
+        duration: Duration(milliseconds: 500),
         vsync: this,
       ),
     );
@@ -116,7 +116,7 @@ class ChatMessage extends StatelessWidget {
 
     return SizeTransition(
       sizeFactor:
-          CurvedAnimation(parent: animationController, curve: Curves.easeOut),
+          CurvedAnimation(parent: animationController, curve: Curves.bounceOut),
       axisAlignment: 0.0,
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 10.0),
