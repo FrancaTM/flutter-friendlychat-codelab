@@ -23,9 +23,17 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _textController = TextEditingController();
+  final List<ChatMessage> _messages = <ChatMessage>[];
 
   void _handleSubmitted(String text) {
     _textController.clear();
+
+    ChatMessage message = ChatMessage(
+      text: text,
+    );
+    setState(() {
+      _messages.insert(0, message);
+    });
   }
 
   Widget _buildTextComposer() {
@@ -62,7 +70,23 @@ class _ChatScreenState extends State<ChatScreen> {
       appBar: AppBar(
         title: Text("FriendlyChat"),
       ),
-      body: _buildTextComposer(),
+      body: Column(
+        children: <Widget>[
+          Flexible(
+            child: ListView.builder(
+              padding: EdgeInsets.all(8.0),
+              reverse: true,
+              itemCount: _messages.length,
+              itemBuilder: (_, int index) => _messages[index],
+            ),
+          ),
+          Divider(height: 1.0),
+          Container(
+            child: SafeArea(child: _buildTextComposer()),
+            decoration: BoxDecoration(color: Theme.of(context).cardColor),
+          ),
+        ],
+      ),
     );
   }
 }
@@ -70,7 +94,7 @@ class _ChatScreenState extends State<ChatScreen> {
 class ChatMessage extends StatelessWidget {
   final String text;
 
-  ChatMessage(this.text);
+  ChatMessage({this.text});
 
   @override
   Widget build(BuildContext context) {
