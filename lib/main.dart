@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/cupertino.dart';
 
+/// Resources:
+/// https://codelabs.developers.google.com/codelabs/flutter/index.html?index=..%2F..index#8
+
 void main() {
   runApp(FriendlyChatApp());
 }
