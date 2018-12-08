@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/cupertino.dart';
 
+import 'package:google_sign_in/google_sign_in.dart';
+import 'dart:async';
+
 /// Resources:
 /// https://codelabs.developers.google.com/codelabs/flutter/index.html?index=..%2F..index#8
 
@@ -19,6 +22,10 @@ final ThemeData kDefaultTheme = ThemeData(
   primarySwatch: Colors.purple,
   accentColor: Colors.orangeAccent[400],
 );
+
+const String _name = "Túlio";
+
+final googleSignIn = GoogleSignIn();
 
 class FriendlyChatApp extends StatelessWidget {
   @override
@@ -107,6 +114,15 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     );
   }
 
+  Future<Null> _ensureLoggedIn() async {
+    GoogleSignInAccount user = googleSignIn.currentUser;
+
+    if (user == null) user = await googleSignIn.signInSilently();
+    if (user == null) {
+      await googleSignIn.signIn();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -160,8 +176,6 @@ class ChatMessage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const String _name = "Túlio";
-
     return SizeTransition(
       sizeFactor:
           CurvedAnimation(parent: animationController, curve: Curves.bounceOut),
