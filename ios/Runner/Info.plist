@@ -51,6 +51,7 @@
     		<array>
     			<!-- Copied from GoogleServices-Info.plist key REVERSED_CLIENT_ID -->
     			<string>com.googleusercontent.apps.908326755069-1oiu9lmomk5e6q0pdq2jrjkmm8th62f3</string>
+    			<string>learning.friendlychatCodelab</string>
     		</array>
     	</dict>
     </array>
