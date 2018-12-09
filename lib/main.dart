@@ -23,8 +23,6 @@ final ThemeData kDefaultTheme = ThemeData(
   accentColor: Colors.orangeAccent[400],
 );
 
-const String _name = "Túlio";
-
 final googleSignIn = GoogleSignIn();
 
 class FriendlyChatApp extends StatelessWidget {
@@ -195,7 +193,7 @@ class ChatMessage extends StatelessWidget {
               child: CircleAvatar(
                 backgroundImage: NetworkImage(
                   googleSignIn.currentUser.photoUrl,
-                ), // child: Text(_name[0]),
+                ),
               ),
             ),
             Expanded(
@@ -203,7 +201,7 @@ class ChatMessage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    _name,
+                    googleSignIn.currentUser.displayName,
                     style: Theme.of(context).textTheme.subhead,
                   ),
                   Container(
