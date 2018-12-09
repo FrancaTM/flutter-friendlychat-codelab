@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:async';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 /// Resources:
 /// https://codelabs.developers.google.com/codelabs/flutter/index.html?index=..%2F..index#8
@@ -27,6 +28,7 @@ final ThemeData kDefaultTheme = ThemeData(
 final googleSignIn = GoogleSignIn();
 
 final analytics = FirebaseAnalytics();
+final auth = FirebaseAuth.instance;
 
 class FriendlyChatApp extends StatelessWidget {
   @override
@@ -75,6 +77,15 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     if (user == null) {
       await googleSignIn.signIn();
       analytics.logLogin();
+    }
+
+    if (await auth.currentUser() == null) {
+      GoogleSignInAuthentication credentials =
+          await googleSignIn.currentUser.authentication;
+      await auth.signInWithGoogle(
+        idToken: credentials.idToken,
+        accessToken: credentials.accessToken,
+      );
     }
   }
 
