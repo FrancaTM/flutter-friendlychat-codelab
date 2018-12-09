@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 
 import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:async';
+import 'package:firebase_analytics/firebase_analytics.dart';
 
 /// Resources:
 /// https://codelabs.developers.google.com/codelabs/flutter/index.html?index=..%2F..index#8
@@ -24,6 +25,8 @@ final ThemeData kDefaultTheme = ThemeData(
 );
 
 final googleSignIn = GoogleSignIn();
+
+final analytics = FirebaseAnalytics();
 
 class FriendlyChatApp extends StatelessWidget {
   @override
