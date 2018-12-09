@@ -52,13 +52,7 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   final List<ChatMessage> _messages = <ChatMessage>[];
   bool _isComposing = false;
 
-  void _handleSubmitted(String text) {
-    _textController.clear();
-
-    setState(() {
-      _isComposing = false;
-    });
-
+  void _sendMessage({String text}) {
     ChatMessage message = ChatMessage(
       text: text,
       animationController: AnimationController(
@@ -70,6 +64,17 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
       _messages.insert(0, message);
     });
     message.animationController.forward();
+  }
+
+  Future<Null> _handleSubmitted(String text) async {
+    _textController.clear();
+
+    setState(() {
+      _isComposing = false;
+    });
+
+    await _ensureLoggedIn();
+    _sendMessage(text: text);
   }
 
   Widget _buildTextComposer() {
