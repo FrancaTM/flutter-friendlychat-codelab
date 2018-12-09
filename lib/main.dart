@@ -67,6 +67,16 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
     message.animationController.forward();
   }
 
+  Future<Null> _ensureLoggedIn() async {
+    GoogleSignInAccount user = googleSignIn.currentUser;
+
+    if (user == null) user = await googleSignIn.signInSilently();
+    if (user == null) {
+      await googleSignIn.signIn();
+      analytics.logLogin();
+    }
+  }
+
   Future<Null> _handleSubmitted(String text) async {
     _textController.clear();
 
@@ -118,15 +128,6 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
         ),
       ),
     );
-  }
-
-  Future<Null> _ensureLoggedIn() async {
-    GoogleSignInAccount user = googleSignIn.currentUser;
-
-    if (user == null) user = await googleSignIn.signInSilently();
-    if (user == null) {
-      await googleSignIn.signIn();
-    }
   }
 
   @override
