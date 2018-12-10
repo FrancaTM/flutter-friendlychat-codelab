@@ -16,6 +16,8 @@ import 'package:image_picker/image_picker.dart';
 
 /// Resources:
 /// https://codelabs.developers.google.com/codelabs/flutter/index.html?index=..%2F..index#8
+///
+/// https://github.com/flutter/friendlychat-steps
 
 void main() {
   runApp(FriendlyChatApp());
