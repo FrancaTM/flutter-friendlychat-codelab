@@ -2,12 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/cupertino.dart';
 
-import 'package:google_sign_in/google_sign_in.dart';
 import 'dart:async';
+import 'dart:math';
+import 'dart:io';
+
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:firebase_database/ui/firebase_animated_list.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
 
 /// Resources:
 /// https://codelabs.developers.google.com/codelabs/flutter/index.html?index=..%2F..index#8
@@ -57,20 +62,10 @@ class _ChatScreenState extends State<ChatScreen> {
   bool _isComposing = false;
   final reference = FirebaseDatabase.instance.reference().child('messages');
 
-  void _sendMessage({String text}) {
-//    ChatMessage message = ChatMessage(
-//      text: text,
-//      animationController: AnimationController(
-//        duration: Duration(milliseconds: 500),
-//        vsync: this,
-//      ),
-//    );
-//    setState(() {
-//      _messages.insert(0, message);
-//    });
-//    message.animationController.forward();
+  void _sendMessage({String text, String imageUrl}) {
     reference.push().set({
       'text': text,
+      'imageUrl': imageUrl,
       'senderName': googleSignIn.currentUser.displayName,
       'senderPhotoUrl': googleSignIn.currentUser.photoUrl,
     });
@@ -114,6 +109,22 @@ class _ChatScreenState extends State<ChatScreen> {
         margin: const EdgeInsets.symmetric(horizontal: 8.0),
         child: Row(
           children: <Widget>[
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: 4.0),
+              child: IconButton(
+                icon: Icon(Icons.photo_camera),
+                onPressed: () async {
+                  await _ensureLoggedIn();
+                  File imageFile = await ImagePicker.pickImage();
+                  int random = new Random().nextInt(100000);
+                  StorageReference ref =
+                      FirebaseStorage.instance.ref().child("image_$random.jpg");
+                  StorageUploadTask uploadTask = ref.put(imageFile);
+                  Uri downloadUrl = (await uploadTask.future).downloadUrl;
+                  _sendMessage(imageUrl: downloadUrl.toString());
+                },
+              ),
+            ),
             Flexible(
               child: TextField(
                 controller: _textController,
@@ -165,8 +176,8 @@ class _ChatScreenState extends State<ChatScreen> {
                 sort: (a, b) => b.key.compareTo(a.key),
                 padding: EdgeInsets.all(8.0),
                 reverse: true,
-                itemBuilder:
-                    (_, DataSnapshot snapshot, Animation<double> animation, __) {
+                itemBuilder: (_, DataSnapshot snapshot,
+                    Animation<double> animation, __) {
                   return ChatMessage(
                     snapshot: snapshot,
                     animation: animation,
@@ -227,7 +238,12 @@ class ChatMessage extends StatelessWidget {
                   ),
                   Container(
                     margin: const EdgeInsets.only(top: 5.0),
-                    child: Text(snapshot.value['text']),
+                    child: snapshot.value['imageUrl'] != null
+                        ? Image.network(
+                            snapshot.value['imageUrl'],
+                            width: 250.0,
+                          )
+                        : Text(snapshot.value['text']),
                   ),
                 ],
               ),
