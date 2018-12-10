@@ -2,6 +2,10 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Share images with other chat users</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>Share images with other chat users</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleExecutable</key>
@@ -41,20 +45,17 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<!-- Google Sign-in Section -->
-    <key>CFBundleURLTypes</key>
-    <array>
-    	<dict>
-    		<key>CFBundleTypeRole</key>
-    		<string>Editor</string>
-    		<key>CFBundleURLSchemes</key>
-    		<array>
-    			<!-- Copied from GoogleServices-Info.plist key REVERSED_CLIENT_ID -->
-    			<string>com.googleusercontent.apps.908326755069-1oiu9lmomk5e6q0pdq2jrjkmm8th62f3</string>
-    			<string>learning.friendlychatCodelab</string>
-    		</array>
-    	</dict>
-    </array>
-    <!-- End of the Google Sign-in Section -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.908326755069-1oiu9lmomk5e6q0pdq2jrjkmm8th62f3</string>
+				<string>learning.friendlychatCodelab</string>
+			</array>
+		</dict>
+	</array>
 </dict>
 </plist>
