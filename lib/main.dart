@@ -52,9 +52,8 @@ class ChatScreen extends StatefulWidget {
   }
 }
 
-class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
+class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _textController = TextEditingController();
-  final List<ChatMessage> _messages = <ChatMessage>[];
   bool _isComposing = false;
   final reference = FirebaseDatabase.instance.reference().child('messages');
 
@@ -161,11 +160,18 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
         child: Column(
           children: <Widget>[
             Flexible(
-              child: ListView.builder(
+              child: FirebaseAnimatedList(
+                query: reference,
+                sort: (a, b) => b.key.compareTo(a.key),
                 padding: EdgeInsets.all(8.0),
                 reverse: true,
-                itemCount: _messages.length,
-                itemBuilder: (_, int index) => _messages[index],
+                itemBuilder:
+                    (_, DataSnapshot snapshot, Animation<double> animation, __) {
+                  return ChatMessage(
+                    snapshot: snapshot,
+                    animation: animation,
+                  );
+                },
               ),
             ),
             Divider(height: 1.0),
@@ -185,27 +191,18 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
       ),
     );
   }
-
-  @override
-  void dispose() {
-    for (ChatMessage message in _messages) {
-      message.animationController.dispose();
-    }
-    super.dispose();
-  }
 }
 
 class ChatMessage extends StatelessWidget {
-  final String text;
-  final AnimationController animationController;
+  final DataSnapshot snapshot;
+  final Animation animation;
 
-  ChatMessage({this.text, this.animationController});
+  ChatMessage({this.snapshot, this.animation});
 
   @override
   Widget build(BuildContext context) {
     return SizeTransition(
-      sizeFactor:
-          CurvedAnimation(parent: animationController, curve: Curves.bounceOut),
+      sizeFactor: CurvedAnimation(parent: animation, curve: Curves.bounceOut),
       axisAlignment: 0.0,
       child: Container(
         margin: const EdgeInsets.symmetric(vertical: 10.0),
@@ -216,7 +213,7 @@ class ChatMessage extends StatelessWidget {
               margin: const EdgeInsets.only(right: 16.0),
               child: CircleAvatar(
                 backgroundImage: NetworkImage(
-                  googleSignIn.currentUser.photoUrl,
+                  snapshot.value['senderPhotoUrl'],
                 ),
               ),
             ),
@@ -225,12 +222,12 @@ class ChatMessage extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(
-                    googleSignIn.currentUser.displayName,
+                    snapshot.value['senderName'],
                     style: Theme.of(context).textTheme.subhead,
                   ),
                   Container(
                     margin: const EdgeInsets.only(top: 5.0),
-                    child: Text(text),
+                    child: Text(snapshot.value['text']),
                   ),
                 ],
               ),
