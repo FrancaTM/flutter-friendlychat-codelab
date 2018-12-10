@@ -56,19 +56,25 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   final TextEditingController _textController = TextEditingController();
   final List<ChatMessage> _messages = <ChatMessage>[];
   bool _isComposing = false;
+  final reference = FirebaseDatabase.instance.reference().child('messages');
 
   void _sendMessage({String text}) {
-    ChatMessage message = ChatMessage(
-      text: text,
-      animationController: AnimationController(
-        duration: Duration(milliseconds: 500),
-        vsync: this,
-      ),
-    );
-    setState(() {
-      _messages.insert(0, message);
+//    ChatMessage message = ChatMessage(
+//      text: text,
+//      animationController: AnimationController(
+//        duration: Duration(milliseconds: 500),
+//        vsync: this,
+//      ),
+//    );
+//    setState(() {
+//      _messages.insert(0, message);
+//    });
+//    message.animationController.forward();
+    reference.push().set({
+      'text': text,
+      'senderName': googleSignIn.currentUser.displayName,
+      'senderPhotoUrl': googleSignIn.currentUser.photoUrl,
     });
-    message.animationController.forward();
     analytics.logEvent(name: 'send_message');
   }
 
